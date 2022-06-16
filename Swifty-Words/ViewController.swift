@@ -13,12 +13,18 @@ class ViewController: UIViewController {
     var answersLabel: UILabel!
     var currentAnswer: UITextField!
     var scoreLabel: UILabel!
+    
     var letterButtons = [UIButton]()
     
     var activatedButtons = [UIButton]()
     var solutions = [String]()
-    var score = 0
+    var score = 0{
+        didSet{
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     var level = 1
+    
     
     
     override func loadView() {
@@ -88,13 +94,13 @@ class ViewController: UIViewController {
             currentAnswer.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
             currentAnswer.topAnchor.constraint(equalTo: cluesLabel.bottomAnchor, constant: 20),
                                      
-            submit.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor),
-            submit.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -100),
-            submit.heightAnchor.constraint(equalToConstant: 44),
+            clear.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor),
+            clear.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -100),
+            clear.heightAnchor.constraint(equalToConstant: 44),
                                      
-            clear.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 100),
-            clear.centerYAnchor.constraint(equalTo: submit.centerYAnchor),
-            clear.heightAnchor.constraint(equalToConstant: 44 ),
+            submit.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 100),
+            submit.centerYAnchor.constraint(equalTo: clear.centerYAnchor),
+            submit.heightAnchor.constraint(equalToConstant: 44),
                                      
             buttonsView.widthAnchor.constraint(equalToConstant: 750),
             buttonsView.heightAnchor.constraint(equalToConstant: 320),
