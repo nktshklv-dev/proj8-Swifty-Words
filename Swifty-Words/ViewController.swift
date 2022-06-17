@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     var scoreLabel: UILabel!
     
     var letterButtons = [UIButton]()
-    
     var activatedButtons = [UIButton]()
     var solutions = [String]()
     var score = 0{
@@ -97,10 +96,12 @@ class ViewController: UIViewController {
             clear.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor),
             clear.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -100),
             clear.heightAnchor.constraint(equalToConstant: 44),
+       
                                      
             submit.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 100),
             submit.centerYAnchor.constraint(equalTo: clear.centerYAnchor),
             submit.heightAnchor.constraint(equalToConstant: 44),
+             
                                      
             buttonsView.widthAnchor.constraint(equalToConstant: 750),
             buttonsView.heightAnchor.constraint(equalToConstant: 320),
@@ -137,6 +138,46 @@ class ViewController: UIViewController {
         loadLevel()
     }
     
+    
+   
+    func loadLevel(){
+        var clueString = ""
+        var solutionsString = ""
+        var letterBits = [String]()
+        
+        if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt"){
+            if let levelContents = try? String(contentsOf: levelFileURL){
+                var lines = levelContents.components(separatedBy: "\n")
+                lines.shuffle()
+                
+                
+                for (index, line) in lines.enumerated(){
+                    let parts = line.components(separatedBy: ": ")
+                    let answer = parts[0]
+                    let clue = parts[1]
+                    
+                    clueString += "\(index + 1 ). \(clue)\n"
+                    
+                    let solutionWord = answer.replacingOccurrences(of: "|", with: "")
+                    solutionsString += "\(solutionWord.count) letters\n"
+                    solutions.append(solutionWord)
+                    
+                    let bits = answer.components(separatedBy: "|")
+                    letterBits += bits
+                }
+            }
+        }
+        
+        cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
+        answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        letterBits.shuffle()
+        if letterButtons.count == letterBits.count{
+            for i in 0..<letterButtons.count{
+                letterButtons[i].setTitle(letterBits[i], for: .normal)
+            }
+        }
+    }
     
     @objc func letterTapped(_ sender: UIButton){
         guard let buttonTitle = sender.titleLabel?.text else {return}
@@ -182,45 +223,7 @@ class ViewController: UIViewController {
         }
         activatedButtons.removeAll()
     }
-    func loadLevel(){
-        var clueString = ""
-        var solutionsString = ""
-        var letterBits = [String]()
-        
-        if let levelFileURL = Bundle.main.url(forResource: "level\(level)", withExtension: "txt"){
-            if let levelContents = try? String(contentsOf: levelFileURL){
-                var lines = levelContents.components(separatedBy: "\n")
-                lines.shuffle()
-                
-                
-                for (index, line) in lines.enumerated(){
-                    let parts = line.components(separatedBy: ": ")
-                    let answer = parts[0]
-                    let clue = parts[1]
-                    
-                    clueString += "\(index + 1 ). \(clue)\n"
-                    
-                    let solutionWord = answer.replacingOccurrences(of: "|", with: "")
-                    solutionsString += "\(solutionWord.count) letters\n"
-                    solutions.append(solutionWord)
-                    
-                    let bits = answer.components(separatedBy: "|")
-                    letterBits += bits
-                }
-            }
-        }
-        
-        cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
-        answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        letterBits.shuffle()
-        if letterButtons.count == letterBits.count{
-            for i in 0..<letterButtons.count{
-                letterButtons[i].setTitle(letterBits[i], for: .normal)
-            }
-        }
-    }
 
-
+    
 }
 
